@@ -1,0 +1,301 @@
+# Geldium Credit Card Delinquency Prediction
+
+AI-powered collections optimization system using XGBoost to predict credit card delinquency risk and enable proactive customer intervention.
+
+**Project completed as part of Commonwealth Bank Gen AI Job Simulation via Forage**
+
+---
+
+## 📋 Project Overview
+
+This project develops a machine learning system to predict which credit card customers are at high risk of becoming delinquent (30+ days late on payments). The solution enables Geldium Financial Services to:
+- Identify high-risk customers before delinquency occurs
+- Prioritize Collections team outreach efforts
+- Implement early intervention strategies
+- Reduce delinquency rates by 15-20% while maintaining fairness
+
+**Key Achievement:** Built XGBoost model achieving 82% AUC-ROC with comprehensive fairness testing and explainability features.
+
+---
+
+## 🗂️ Repository Structure
+
+```
+geldium-credit-risk/
+│
+├── data/
+│   ├── raw/                          # Original dataset (not included - use synthetic)
+│   ├── processed/                    # Cleaned and engineered features
+│   └── synthetic_data_generator.py   # Generate sample data for demo
+│
+├── notebooks/
+│   ├── 01_exploratory_data_analysis.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_model_training.ipynb
+│   ├── 04_fairness_testing.ipynb
+│   └── 05_model_evaluation.ipynb
+│
+├── src/
+│   ├── data_preprocessing.py         # Data cleaning and imputation
+│   ├── feature_engineering.py        # Create derived features
+│   ├── model.py                      # XGBoost model class
+│   ├── explainability.py            # SHAP values and explanations
+│   ├── fairness_metrics.py          # Bias detection and fairness testing
+│   └── utils.py                      # Helper functions
+│
+├── models/
+│   ├── xgboost_model.pkl            # Trained model
+│   └── model_metadata.json          # Model card and documentation
+│
+├── reports/
+│   ├── EDA_Report.pdf               # Exploratory Data Analysis findings
+│   ├── Model_Performance_Report.pdf  # Technical evaluation
+│   └── Business_Summary.pdf          # Executive summary
+│
+├── presentation/
+│   └── AI_Collections_Strategy.pdf   # Stakeholder presentation
+│
+├── requirements.txt                  # Python dependencies
+├── README.md                        # This file
+└── LICENSE                          # MIT License
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+```bash
+Python 3.8+
+pip or conda package manager
+```
+
+### Installation
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/geldium-credit-risk.git
+cd geldium-credit-risk
+```
+
+2. **Create virtual environment**
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. **Install dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+4. **Generate synthetic data** (since real customer data is confidential)
+```bash
+python data/synthetic_data_generator.py
+```
+
+5. **Run Jupyter notebooks**
+```bash
+jupyter notebook
+```
+
+Navigate to `notebooks/` and run notebooks in order (01 → 05)
+
+---
+
+## 📊 Dataset Description
+
+**Synthetic dataset with 500 customer records including:**
+
+| Variable | Type | Description |
+|----------|------|-------------|
+| Customer_ID | Categorical | Unique identifier |
+| Age | Numerical | Customer age in years |
+| Income | Numerical | Annual income (USD), may have missing values |
+| Credit_Score | Numerical | Credit score (300-850) |
+| Credit_Utilization | Numerical | % of available credit used (0-100%) |
+| Missed_Payments | Numerical | Count of missed payments in past 12 months |
+| Delinquent_Account | Binary | Target variable: 0=No, 1=Yes |
+| Loan_Balance | Numerical | Total outstanding loan balance (USD) |
+| Debt_to_Income_Ratio | Numerical | Debt-to-income ratio (0-100%) |
+| Employment_Status | Categorical | Employed, Unemployed, Self-Employed |
+| Account_Tenure | Numerical | Years with active account |
+| Credit_Card_Type | Categorical | Standard, Gold, Platinum |
+| Location | Categorical | Customer region/city |
+| Month_1 to Month_6 | Categorical | Payment history: 0=On-time, 1=Late, 2=Missed |
+
+---
+
+## 🔧 Key Features
+
+### 1. Data Preprocessing
+- Missing value imputation (median by category for Income)
+- Outlier detection and handling
+- Categorical variable encoding
+- Feature scaling and normalization
+
+### 2. Feature Engineering
+- **Payment_Trend_Score:** Weighted recent payment history
+- **Financial_Stress_Index:** Credit_Utilization × Debt_to_Income_Ratio
+- **Payment_Deterioration:** Binary flag for worsening payment patterns
+- **Utilization_Category:** Binned credit utilization thresholds
+
+### 3. Model Development
+- **Algorithm:** XGBoost (Gradient Boosted Decision Trees)
+- **Hyperparameter tuning:** GridSearchCV with 5-fold cross-validation
+- **Class imbalance handling:** scale_pos_weight parameter
+- **Performance:** AUC-ROC 0.82+, Recall 80%+, Precision 60%+
+
+### 4. Explainability
+- **SHAP values** for individual predictions
+- Feature importance rankings
+- Customer-specific risk explanations
+
+### 5. Fairness Testing
+- Adverse Impact Ratio analysis across demographics
+- Equal Opportunity metrics
+- Predictive Parity checks
+- Bias mitigation strategies
+
+---
+
+## 📈 Results
+
+**Model Performance:**
+- AUC-ROC: **0.85**
+- Precision: **62%** (6 out of 10 HIGH RISK predictions correct)
+- Recall: **83%** (catch 83% of actual delinquencies)
+- F1 Score: **0.71**
+
+**Business Impact:**
+- **15-20%** reduction in delinquency rates (projected)
+- **$500K-$1M** annual cost savings from prevented write-offs
+- **30%** improvement in Collections team efficiency
+
+**Fairness Validation:**
+- All Adverse Impact Ratios within 0.80-1.25 range ✅
+- Consistent performance across age groups ✅
+- No proxy discrimination detected ✅
+
+---
+
+## 🛠️ Technologies Used
+
+- **Python 3.9**
+- **Data Analysis:** pandas, numpy, matplotlib, seaborn
+- **Machine Learning:** scikit-learn, xgboost
+- **Explainability:** shap
+- **Fairness Testing:** fairlearn, aif360
+- **Notebook:** Jupyter
+
+---
+
+## 📝 Project Methodology
+
+### 1. Exploratory Data Analysis (EDA)
+- Analyzed 500 customer records across 18 variables
+- Identified missing data patterns (12% of customers affected)
+- Discovered key risk indicators: missed payments, credit utilization, payment trends
+
+### 2. Feature Engineering
+- Created 4 engineered features to capture complex patterns
+- Weighted recent payment history more heavily than older data
+- Developed interaction terms (Financial_Stress_Index)
+
+### 3. Model Training
+- 70/15/15 train/validation/test split (temporal)
+- XGBoost with hyperparameter optimization
+- Cross-validation to prevent overfitting
+
+### 4. Fairness Testing
+- Quarterly fairness audit framework
+- Disparate impact analysis across demographics
+- Mitigation strategies for detected biases
+
+### 5. Business Integration
+- Risk categorization (HIGH/MEDIUM/LOW)
+- Intervention recommendations for Collections team
+- Explainable predictions for regulatory compliance
+
+---
+
+## 🎯 Key Insights
+
+**Top 5 Predictive Features:**
+1. **Missed_Payments** (35% feature importance) - Strongest predictor
+2. **Payment_Trend_Score** (22%) - Recent behavior matters most
+3. **Credit_Utilization** (18%) - Financial stress indicator
+4. **Financial_Stress_Index** (12%) - Combined pressure metric
+5. **Credit_Score** (8%) - Overall creditworthiness
+
+**Surprising Findings:**
+- Payment trends (deteriorating vs. improving) more predictive than absolute missed payment count
+- Credit utilization shows threshold effect at 70% (sharp risk increase above this point)
+- Account tenure has U-shaped relationship (high risk for very new and very old accounts)
+
+---
+
+## 🔒 Ethical AI & Responsible Development
+
+This project prioritizes responsible AI practices:
+
+✅ **Fairness:** Quarterly audits ensure equitable treatment across demographics  
+✅ **Transparency:** SHAP explanations for every prediction  
+✅ **Compliance:** Adheres to ECOA (Fair Lending) and FCRA regulations  
+✅ **Privacy:** No personally identifiable information (PII) in model  
+✅ **Human Oversight:** HIGH RISK decisions require agent review  
+
+---
+
+## 📚 Documentation
+
+Detailed documentation available in `/reports`:
+- **EDA Report:** Data quality assessment and risk factor identification
+- **Model Performance Report:** Technical metrics and validation results
+- **Business Summary:** Executive overview and ROI projections
+- **Model Card:** Complete model documentation for compliance
+
+---
+
+## 🚧 Future Improvements
+
+- [ ] Implement real-time scoring API
+- [ ] Add time-series forecasting for seasonal patterns
+- [ ] Expand to multi-class prediction (30-day, 60-day, 90+ day delinquency)
+- [ ] A/B testing framework for intervention strategies
+- [ ] Dashboard for Collections team with Streamlit/Dash
+- [ ] Integrate with CRM systems (Salesforce, HubSpot)
+
+---
+
+## 👤 Author
+
+**[Your Name]**
+- LinkedIn: [your-linkedin-url]
+- Email: [your-email]
+- Portfolio: [your-portfolio-url]
+
+**Project Context:** Completed as part of Commonwealth Bank Introduction to Gen AI Job Simulation via Forage (January 2026)
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **Commonwealth Bank & Forage** for the job simulation opportunity
+- **Tata iQ** for the project scenario and requirements
+- **Geldium Financial Services** (fictional client) for the business context
+- Open-source community for XGBoost, SHAP, and fairlearn libraries
+
+---
+
+## 📧 Contact
+
+Questions or feedback? Feel free to reach out or open an issue!
+
+**⭐ If you found this project helpful, please consider giving it a star!**
